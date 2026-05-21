@@ -9,6 +9,7 @@ import 'package:space_shooter/components/player.dart';
 class SpaceGame extends FlameGame {
     late Player player;
 
+    late JoystickComponent joystick;
 
     @override
     FutureOr<void> onLoad() async {
@@ -23,15 +24,34 @@ class SpaceGame extends FlameGame {
 
     }
 
-    void startGame() {
+    void startGame() async {
+      await _createJoystick();
       _createPlayer();
     }
     
     void _createPlayer() {
       player = Player()
         ..anchor = Anchor.center
-        ..position = Vector2(size.x / 2, size.y * 0.2)
+        ..position = Vector2(size.x / 2, size.y * 0.8)
         ..size = Vector2.all(100);
       add(player);
     }
+
+    FutureOr<void> _createJoystick() async {
+      joystick = JoystickComponent(
+        knob: SpriteComponent(
+          sprite: await loadSprite('joystick_knob.png'),
+          size: Vector2.all(50),
+        ),
+        background: SpriteComponent(
+          sprite: await loadSprite('joystick_background.png'),
+          size: Vector2.all(100)
+        ),
+        anchor: Anchor.bottomLeft,
+        position: Vector2(20, size.y - 20),
+      );
+
+      add(joystick);
+    }
+
 }
